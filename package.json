@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev --turbopack --experimental-https --hostname photocafe.local --experimental-https-key ./certificates/photocafe.local+3-key.pem --experimental-https-cert ./certificates/photocafe.local+3.pem",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"

@@ -22,16 +22,24 @@ export const GET = async (req: NextRequest) => {
 
     // Check each file's creation time
     for (const file of files) {
-      const [metadata] = await file.getMetadata();
+      try {
+        const [metadata] = await file.getMetadata();
 
-      if (!metadata.timeCreated) {
-        continue; // Skip files without creation time
-      }
+        if (!metadata.timeCreated) {
+          continue; // Skip files without creation time
+        }
 
-      const createdTime = new Date(metadata.timeCreated);
+        const createdTime = new Date(metadata.timeCreated);
 
-      if (createdTime < eightHoursAgo) {
-        filesToDelete.push(file);
+        if (createdTime < eightHoursAgo) {
+          filesToDelete.push(file);
+        }
+      } catch (metadataError) {
+        console.error(
+          `Failed to get metadata for ${file.name}:`,
+          metadataError
+        );
+        continue;
       }
     }
 
@@ -46,11 +54,25 @@ export const GET = async (req: NextRequest) => {
     const deletePromises = filesToDelete.map(async (file) => {
       try {
         await file.delete();
-        return { success: true, fileName: file.name };
+        return {
+          success: true,
+          fileName: file.name.replace(/[\x00-\x1f\x7f-\x9f]/g, ""), // Remove control characters
+        };
       } catch (e) {
-        console.error(`Failed to delete file ${file.name}:`, e);
-        const message = e instanceof Error ? e.message : "Unknown error";
-        return { success: false, fileName: file.name, error: message };
+        const sanitizedFileName = file.name.replace(
+          /[\x00-\x1f\x7f-\x9f]/g,
+          ""
+        );
+        const errorMessage =
+          e instanceof Error
+            ? e.message.replace(/[\x00-\x1f\x7f-\x9f]/g, "")
+            : "Unknown error";
+        console.error(`Failed to delete file ${sanitizedFileName}:`, e);
+        return {
+          success: false,
+          fileName: sanitizedFileName,
+          error: errorMessage,
+        };
       }
     });
 
@@ -60,7 +82,7 @@ export const GET = async (req: NextRequest) => {
 
     return NextResponse.json(
       {
-        message: `Cleanup completed`,
+        message: "Cleanup completed",
         deleted: successCount,
         failed: failCount,
         details: results,
@@ -68,11 +90,12 @@ export const GET = async (req: NextRequest) => {
       { status: 200 }
     );
   } catch (error) {
+    const errorMessage =
+      error instanceof Error
+        ? error.message.replace(/[\x00-\x1f\x7f-\x9f]/g, "")
+        : "Failed to delete files";
     console.error("Error deleting files:", error);
-    return NextResponse.json(
-      { error: "Failed to delete files" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 };
 

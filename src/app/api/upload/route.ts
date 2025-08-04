@@ -27,6 +27,8 @@ export const POST = async (req: NextRequest) => {
         metadata: {
           contentType: file.type,
         },
+        // five minutes in milliseconds
+        timeout: 5 * 60 * 1000,
       });
 
       // Make file publicly accessible and get URL

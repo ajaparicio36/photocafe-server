@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { storage } from "@/lib/firebase/admin";
+import { readFile } from "fs/promises";
+import path from "path";
+import { getArchiveDir, getFilesInArchive } from "@/lib/storage";
 import archiver from "archiver";
 
 export const GET = async (
@@ -16,10 +18,7 @@ export const GET = async (
       );
     }
 
-    const bucket = storage.bucket();
-    const [files] = await bucket.getFiles({
-      prefix: `${id}/`,
-    });
+    const files = await getFilesInArchive(id);
 
     if (files.length === 0) {
       return NextResponse.json(
@@ -48,13 +47,13 @@ export const GET = async (
 
         // Add files to archive
         Promise.all(
-          files.map(async (file) => {
+          files.map(async (fileName) => {
             try {
-              const [buffer] = await file.download();
-              const fileName = file.name.split("/").pop() || file.name;
+              const filePath = path.join(getArchiveDir(id), fileName);
+              const buffer = await readFile(filePath);
               archive.append(buffer, { name: fileName });
             } catch (err) {
-              console.error(`Error adding file ${file.name} to archive:`, err);
+              console.error(`Error adding file ${fileName} to archive:`, err);
             }
           })
         )

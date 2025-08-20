@@ -1,6 +1,8 @@
-import { storage } from "@/lib/firebase/admin";
 import { NextRequest, NextResponse } from "next/server";
 import { randomUUID } from "crypto";
+import { writeFile } from "fs/promises";
+import path from "path";
+import { ensureArchiveDir } from "@/lib/storage";
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -17,27 +19,20 @@ export const POST = async (req: NextRequest) => {
       archiveId = randomUUID();
     }
 
-    const bucket = storage.bucket();
+    const archiveDir = await ensureArchiveDir(archiveId);
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || `http://localhost:3000`;
+
     const uploadPromises = files.map(async (file) => {
-      const fileName = `${archiveId}/${file.name}`;
-      const fileRef = bucket.file(fileName);
       const buffer = Buffer.from(await file.arrayBuffer());
+      const filePath = path.join(archiveDir, file.name);
 
-      await fileRef.save(buffer, {
-        metadata: {
-          contentType: file.type,
-        },
-        // five minutes in milliseconds
-        timeout: 5 * 60 * 1000,
-      });
-
-      // Make file publicly accessible and get URL
-      await fileRef.makePublic();
-      const publicUrl = `https://storage.googleapis.com/${bucket.name}/${fileName}`;
+      await writeFile(filePath, buffer);
 
       return {
         fileName: file.name,
-        url: publicUrl,
+        url: `${baseUrl}/api/files/${archiveId}/${encodeURIComponent(
+          file.name
+        )}`,
       };
     });
 

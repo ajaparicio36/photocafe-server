@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { storage } from "@/lib/firebase/admin";
+import { getFilesInArchive } from "@/lib/storage";
 
 export const GET = async (
   req: NextRequest,
@@ -15,10 +15,7 @@ export const GET = async (
       );
     }
 
-    const bucket = storage.bucket();
-    const [files] = await bucket.getFiles({
-      prefix: `${id}/`,
-    });
+    const files = await getFilesInArchive(id);
 
     if (files.length === 0) {
       return NextResponse.json(
@@ -29,14 +26,11 @@ export const GET = async (
 
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
-    const fileUrls = files.map((file) => {
-      const fileName = file.name.split("/").pop();
+    const fileUrls = files.map((fileName) => {
       return {
         fileName: fileName,
-        fullPath: file.name,
-        url: `${baseUrl}/api/retrieve/${id}/download/${encodeURIComponent(
-          fileName || ""
-        )}`,
+        fullPath: `${id}/${fileName}`,
+        url: `${baseUrl}/api/files/${id}/${encodeURIComponent(fileName)}`,
       };
     });
 

@@ -6,19 +6,19 @@ import { lookup } from "mime-types";
 
 export const GET = async (
   req: NextRequest,
-  { params }: { params: Promise<{ id: string; filename: string }> }
+  { params }: { params: Promise<{ archiveId: string; filename: string }> }
 ) => {
   try {
-    const { id, filename } = await params;
+    const { archiveId, filename } = await params;
 
-    if (!id || !filename) {
+    if (!archiveId || !filename) {
       return NextResponse.json(
         { error: "Archive ID and filename are required" },
         { status: 400 }
       );
     }
 
-    const filePath = path.join(getArchiveDir(id), filename);
+    const filePath = path.join(getArchiveDir(archiveId), filename);
 
     try {
       const buffer = await readFile(filePath);
@@ -27,7 +27,6 @@ export const GET = async (
       return new Response(new Uint8Array(buffer), {
         headers: {
           "Content-Type": mimeType,
-          "Content-Disposition": `attachment; filename="${filename}"`,
           "Content-Length": buffer.length.toString(),
         },
       });
@@ -35,9 +34,9 @@ export const GET = async (
       return NextResponse.json({ error: "File not found" }, { status: 404 });
     }
   } catch (error) {
-    console.error("Error downloading file:", error);
+    console.error("Error serving file:", error);
     return NextResponse.json(
-      { error: "Failed to download file" },
+      { error: "Failed to serve file" },
       { status: 500 }
     );
   }

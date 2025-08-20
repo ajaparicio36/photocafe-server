@@ -1,5 +1,5 @@
 import React from "react";
-import { Download, Eye, FileImage, FileVideo } from "lucide-react";
+import { Download, Eye, FileImage, FileVideo, FileText } from "lucide-react";
 
 interface ArchiveFile {
   fileName: string;
@@ -26,8 +26,12 @@ export const FileCard: React.FC<FileCardProps> = ({
     return /\.(mp4|webm|ogg|avi|mov|wmv|flv|mkv)$/i.test(fileName);
   };
 
+  const isPDF = (fileName: string) => {
+    return /\.pdf$/i.test(fileName);
+  };
+
   return (
-    <div className="group bg-card border border-border rounded-lg p-4 hover:bg-accent hover:border-accent-foreground/20 transition-all duration-200 cursor-pointer">
+    <div className="bg-card border border-border rounded-lg p-3 transition-all duration-200">
       <div className="flex flex-col items-center space-y-2">
         <div className="w-16 h-16 flex items-center justify-center bg-muted rounded-lg">
           {isImage(file.fileName) ? (
@@ -38,6 +42,8 @@ export const FileCard: React.FC<FileCardProps> = ({
             />
           ) : isVideo(file.fileName) ? (
             <FileVideo className="h-8 w-8 text-muted-foreground" />
+          ) : isPDF(file.fileName) ? (
+            <FileText className="h-8 w-8 text-muted-foreground" />
           ) : (
             <FileImage className="h-8 w-8 text-muted-foreground" />
           )}
@@ -50,20 +56,20 @@ export const FileCard: React.FC<FileCardProps> = ({
           {file.fileName}
         </p>
 
-        <div className="flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="flex space-x-1 w-full">
           <button
             onClick={() => onPreview(file)}
-            className="p-1 bg-primary text-primary-foreground rounded hover:bg-primary/90 transition-colors"
+            className="flex-1 p-2 bg-primary text-primary-foreground rounded hover:bg-primary/90 transition-colors text-xs"
             title="Preview"
           >
-            <Eye className="h-3 w-3" />
+            <Eye className="h-3 w-3 mx-auto" />
           </button>
           <button
             onClick={() => onDownload(file)}
-            className="p-1 bg-secondary text-secondary-foreground rounded hover:bg-secondary/90 transition-colors"
+            className="flex-1 p-2 bg-secondary text-secondary-foreground rounded hover:bg-secondary/90 transition-colors text-xs"
             title="Download"
           >
-            <Download className="h-3 w-3" />
+            <Download className="h-3 w-3 mx-auto" />
           </button>
         </div>
       </div>

@@ -81,6 +81,27 @@ const ArchivePage = ({
     }
   };
 
+  const handleDownloadZip = async () => {
+    try {
+      const response = await fetch(`/api/retrieve/${archiveId}/zip`);
+      if (!response.ok) {
+        throw new Error("Failed to download ZIP");
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${archiveId}.zip`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (err) {
+      console.error("ZIP download failed:", err);
+    }
+  };
+
   const closeLightbox = () => {
     setLightboxOpen(false);
     setSelectedFile(null);
@@ -100,6 +121,7 @@ const ArchivePage = ({
         <ArchiveHeader
           archiveId={archiveData?.archiveId || ""}
           fileCount={archiveData?.files.length || 0}
+          onDownloadZip={handleDownloadZip}
         />
 
         <FileGrid

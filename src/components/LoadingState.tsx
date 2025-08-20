@@ -10,8 +10,8 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
 }) => {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center">
-      <div className="flex flex-col items-center space-y-4">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="text-center">
+        <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-primary" />
         <p className="text-muted-foreground">{message}</p>
       </div>
     </div>

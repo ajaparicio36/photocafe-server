@@ -27,12 +27,16 @@ export const GET = async (
       );
     }
 
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+
     const fileUrls = files.map((file) => {
-      const publicUrl = `https://storage.googleapis.com/${bucket.name}/${file.name}`;
+      const fileName = file.name.split("/").pop();
       return {
-        fileName: file.name.split("/").pop(), // Get just the filename without folder path
+        fileName: fileName,
         fullPath: file.name,
-        url: publicUrl,
+        url: `${baseUrl}/api/retrieve/${id}/download/${encodeURIComponent(
+          fileName || ""
+        )}`,
       };
     });
 

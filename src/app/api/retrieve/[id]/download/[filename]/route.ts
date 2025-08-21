@@ -18,16 +18,20 @@ export const GET = async (
       );
     }
 
-    const filePath = path.join(getArchiveDir(id), filename);
+    const decodedFilename = decodeURIComponent(filename);
+    const filePath = path.join(getArchiveDir(id), decodedFilename);
 
     try {
       const buffer = await readFile(filePath);
-      const mimeType = lookup(filename) || "application/octet-stream";
+      const mimeType = lookup(decodedFilename) || "application/octet-stream";
 
-      return new Response(new Uint8Array(buffer), {
+      // Convert Buffer to Uint8Array for Response compatibility
+      const uint8Array = new Uint8Array(buffer);
+
+      return new Response(uint8Array, {
         headers: {
           "Content-Type": mimeType,
-          "Content-Disposition": `attachment; filename="${filename}"`,
+          "Content-Disposition": `attachment; filename="${decodedFilename}"`,
           "Content-Length": buffer.length.toString(),
         },
       });

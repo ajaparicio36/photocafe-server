@@ -39,6 +39,32 @@ export const FileCard: React.FC<FileCardProps> = ({
               src={file.url}
               alt={file.fileName}
               className="w-full h-full object-cover rounded-lg"
+              onLoad={() => {
+                console.log("Thumbnail loaded:", file.fileName);
+              }}
+              onError={(e) => {
+                console.error(
+                  "Thumbnail failed to load:",
+                  file.fileName,
+                  file.url
+                );
+                // Try to fetch the URL directly
+                fetch(file.url)
+                  .then((response) => {
+                    console.log(
+                      "Thumbnail fetch response:",
+                      response.status,
+                      response.statusText
+                    );
+                  })
+                  .catch((fetchError) => {
+                    console.error("Thumbnail fetch failed:", fetchError);
+                  });
+                const target = e.target as HTMLImageElement;
+                target.style.display = "none";
+                target.parentElement!.innerHTML =
+                  '<div class="h-8 w-8 text-muted-foreground flex items-center justify-center"><svg viewBox="0 0 24 24" fill="currentColor" class="h-8 w-8"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" /></svg></div>';
+              }}
             />
           ) : isVideo(file.fileName) ? (
             <FileVideo className="h-8 w-8 text-muted-foreground" />

@@ -66,7 +66,15 @@ const ArchivePage = ({
 
   const handleDownload = async (file: ArchiveFile) => {
     try {
-      const response = await fetch(file.url);
+      const response = await fetch(
+        `/api/retrieve/${archiveId}/download/${encodeURIComponent(
+          file.fileName
+        )}`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to download file");
+      }
+
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");

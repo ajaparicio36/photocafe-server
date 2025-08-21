@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 interface ArchiveFile {
   fileName: string;
@@ -17,6 +17,17 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
   isOpen,
   onClose,
 }) => {
+  const [imageLoading, setImageLoading] = useState(true);
+  const [imageError, setImageError] = useState(false);
+
+  // Reset loading states when file changes
+  React.useEffect(() => {
+    if (file && isOpen) {
+      setImageLoading(true);
+      setImageError(false);
+    }
+  }, [file, isOpen]);
+
   const isImage = (fileName: string) => {
     return /\.(jpg|jpeg|png|gif|webp|bmp|svg)$/i.test(fileName);
   };
@@ -48,11 +59,63 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
 
         <div className="flex-1 flex items-center justify-center bg-black/20 rounded-b-lg overflow-hidden">
           {isImage(file.fileName) ? (
-            <img
-              src={file.url}
-              alt={file.fileName}
-              className="max-w-full max-h-full object-contain"
-            />
+            <div className="relative max-w-full max-h-full">
+              {imageLoading && !imageError && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-white">Loading image...</div>
+                </div>
+              )}
+              {imageError ? (
+                <div className="bg-card p-8 rounded-lg text-center max-w-sm">
+                  <p className="text-foreground mb-4">Failed to load image</p>
+                  <a
+                    href={file.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block bg-primary text-primary-foreground px-4 py-2 rounded hover:bg-primary/90 transition-colors"
+                  >
+                    Open in new tab
+                  </a>
+                </div>
+              ) : (
+                <img
+                  src={file.url}
+                  alt={file.fileName}
+                  className="max-w-full max-h-full object-contain"
+                  onLoad={() => {
+                    console.log("Image loaded successfully:", file.fileName);
+                    setImageLoading(false);
+                  }}
+                  onError={(e) => {
+                    console.error(
+                      "Image failed to load:",
+                      file.fileName,
+                      file.url
+                    );
+                    console.error("Error event:", e);
+                    // Try to fetch the URL directly to see what's happening
+                    fetch(file.url)
+                      .then((response) => {
+                        console.log(
+                          "Direct fetch response:",
+                          response.status,
+                          response.statusText
+                        );
+                        return response.text();
+                      })
+                      .then((text) => {
+                        console.log("Response body:", text.substring(0, 200));
+                      })
+                      .catch((fetchError) => {
+                        console.error("Direct fetch failed:", fetchError);
+                      });
+                    setImageLoading(false);
+                    setImageError(true);
+                  }}
+                  style={{ display: imageLoading ? "none" : "block" }}
+                />
+              )}
+            </div>
           ) : isVideo(file.fileName) ? (
             <video
               src={file.url}

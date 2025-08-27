@@ -45,13 +45,13 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
   return (
     <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-2 md:p-4">
       <div className="relative w-full h-full max-w-7xl max-h-full flex flex-col">
-        <div className="flex justify-between items-center p-4 bg-black/50 rounded-t-lg">
-          <h3 className="text-white text-sm md:text-base truncate flex-1 mr-4">
+        <div className="flex justify-between items-center p-4 brand-bg-secondary rounded-t-lg">
+          <h3 className="brand-text-dark text-sm md:text-base truncate flex-1 mr-4 font-medium">
             {file.fileName}
           </h3>
           <button
             onClick={onClose}
-            className="bg-black/50 text-white rounded-full p-2 hover:bg-black/70 transition-colors flex-shrink-0"
+            className="brand-bg-primary brand-text-light rounded-full p-2 hover:bg-opacity-90 transition-colors flex-shrink-0 w-8 h-8 flex items-center justify-center"
           >
             ✕
           </button>
@@ -62,17 +62,17 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
             <div className="relative max-w-full max-h-full">
               {imageLoading && !imageError && (
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-white">Loading image...</div>
+                  <div className="brand-text-light">Loading image...</div>
                 </div>
               )}
               {imageError ? (
-                <div className="bg-card p-8 rounded-lg text-center max-w-sm">
-                  <p className="text-foreground mb-4">Failed to load image</p>
+                <div className="brand-card p-8 rounded-lg text-center max-w-sm">
+                  <p className="brand-text-dark mb-4">Failed to load image</p>
                   <a
                     href={file.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-block bg-primary text-primary-foreground px-4 py-2 rounded hover:bg-primary/90 transition-colors"
+                    className="inline-block brand-button-primary px-4 py-2 rounded hover:bg-opacity-90 transition-colors"
                   >
                     Open in new tab
                   </a>
@@ -134,15 +134,15 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
               />
             </div>
           ) : (
-            <div className="bg-card p-8 rounded-lg text-center max-w-sm">
-              <p className="text-foreground mb-4">
+            <div className="brand-card p-8 rounded-lg text-center max-w-sm">
+              <p className="brand-text-dark mb-4">
                 Preview not available for this file type
               </p>
               <a
                 href={file.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block bg-primary text-primary-foreground px-4 py-2 rounded hover:bg-primary/90 transition-colors"
+                className="inline-block brand-button-primary px-4 py-2 rounded hover:bg-opacity-90 transition-colors"
               >
                 Open in new tab
               </a>

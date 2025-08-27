@@ -6,6 +6,7 @@ import { ErrorState } from "@/components/ErrorState";
 import { ArchiveHeader } from "@/components/ArchiveHeader";
 import { FileGrid } from "@/components/FileGrid";
 import { LightboxModal } from "@/components/LightboxModal";
+import "@/styles/brand.css";
 
 interface ArchiveFile {
   fileName: string;
@@ -124,7 +125,7 @@ const ArchivePage = ({
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen brand-bg-primary">
       <div className="container mx-auto px-4 py-8">
         <ArchiveHeader
           archiveId={archiveData?.archiveId || ""}

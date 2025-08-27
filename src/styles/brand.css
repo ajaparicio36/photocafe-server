@@ -1,0 +1,58 @@
+/* Brand Colors */
+:root {
+  --brand-primary: #76220b;
+  --brand-secondary: #fffbee;
+  --brand-text-light: #fffbee;
+  --brand-text-dark: #000000;
+}
+
+.brand-bg-primary {
+  background-color: var(--brand-primary);
+}
+
+.brand-bg-secondary {
+  background-color: var(--brand-secondary);
+}
+
+.brand-text-light {
+  color: var(--brand-text-light);
+}
+
+.brand-text-dark {
+  color: var(--brand-text-dark);
+}
+
+.brand-card {
+  background-color: var(--brand-secondary);
+  color: var(--brand-text-dark);
+  border: 1px solid rgba(118, 34, 11, 0.2);
+}
+
+.brand-button-primary {
+  background-color: var(--brand-primary);
+  color: var(--brand-text-light);
+}
+
+.brand-button-primary:hover {
+  background-color: rgba(118, 34, 11, 0.9);
+}
+
+.brand-button-secondary {
+  background-color: rgba(118, 34, 11, 0.1);
+  color: var(--brand-text-dark);
+  border: 1px solid rgba(118, 34, 11, 0.3);
+}
+
+.brand-button-secondary:hover {
+  background-color: rgba(118, 34, 11, 0.2);
+}
+
+.brand-logo {
+  max-height: 80px;
+  width: auto;
+}
+
+.brand-logo-small {
+  max-height: 40px;
+  width: auto;
+}

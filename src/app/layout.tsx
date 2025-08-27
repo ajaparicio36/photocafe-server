@@ -15,7 +15,7 @@ if (typeof window === "undefined") {
 }
 
 export const metadata: Metadata = {
-  title: "Photocafe",
+  title: "Click Click",
   description: "Get your soft copies!",
 };
 

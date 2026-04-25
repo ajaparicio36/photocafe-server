@@ -6,7 +6,7 @@ import { lookup } from "mime-types";
 
 export const GET = async (
   req: NextRequest,
-  { params }: { params: Promise<{ archiveId: string; filename: string }> }
+  { params }: { params: Promise<{ archiveId: string; filename: string }> },
 ) => {
   try {
     const { archiveId, filename } = await params;
@@ -16,7 +16,7 @@ export const GET = async (
     if (!archiveId || !filename) {
       return NextResponse.json(
         { error: "Archive ID and filename are required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -48,16 +48,10 @@ export const GET = async (
         "Cache-Control": "public, max-age=3600",
       };
 
-      // Add CORS headers for cross-origin requests
-      headers["Access-Control-Allow-Origin"] = "*";
-      headers["Access-Control-Allow-Methods"] = "GET";
-      headers["Access-Control-Allow-Headers"] = "Content-Type";
-
       // For images, ensure they can be displayed inline
       if (isImage) {
-        headers[
-          "Content-Disposition"
-        ] = `inline; filename="${decodedFilename}"`;
+        headers["Content-Disposition"] =
+          `inline; filename="${decodedFilename}"`;
       }
 
       return new Response(uint8Array, { headers });
@@ -69,7 +63,7 @@ export const GET = async (
     console.error("Error serving file:", error);
     return NextResponse.json(
       { error: "Failed to serve file" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 };

@@ -49,7 +49,7 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
   return (
     <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-2 md:p-4">
       <div className="relative w-full h-full max-w-7xl max-h-full flex flex-col">
-        <div className="flex justify-between items-center p-4 brand-bg-secondary rounded-t-lg">
+        <div className="flex shrink-0 justify-between items-center p-4 brand-bg-secondary rounded-t-lg">
           <h3 className="brand-text-dark text-sm md:text-base truncate flex-1 mr-4 font-medium">
             {file.fileName}
           </h3>
@@ -64,7 +64,7 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
 
         <div className="flex-1 min-h-0 flex items-center justify-center bg-black/20 rounded-b-lg overflow-hidden">
           {isImage(file.fileName) ? (
-            <div className="relative max-w-full max-h-full">
+            <div className="relative flex h-full w-full min-h-0 items-center justify-center">
               {imageLoading && !imageError && (
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="brand-text-light">Loading image...</div>
@@ -86,7 +86,7 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
                 <img
                   src={file.url}
                   alt={file.fileName}
-                  className="max-w-full max-h-full object-contain"
+                  className="h-full w-full object-contain"
                   onLoad={() => {
                     console.log("Image loaded successfully:", file.fileName);
                     setImageLoading(false);

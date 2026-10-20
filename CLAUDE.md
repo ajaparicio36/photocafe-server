@@ -58,3 +58,17 @@ Both paths delegate to `deleteOldFiles()` in `src/lib/storage.ts`, which deletes
 - Client components marked with `"use client"`; the archive viewer is the only client page.
 - Styling via Tailwind v4 plus the brand layer in `src/styles/brand.css` (`.brand-bg-primary`, `.brand-logo`, etc.) — reuse these classes rather than hardcoding brand colors.
 - `cn()` from `src/lib/utils.ts` for conditional class merging.
+
+## Agent skills
+
+### Issue tracker
+
+Track this repository's improvement issues in local Markdown under `docs/improvements/tracker/`. Before creating, fetching, or publishing an issue, read `docs/improvements/agents/issue-tracker.md`.
+
+### Triage labels
+
+Use the default triage vocabulary. Before triaging an issue, read `docs/improvements/agents/triage-labels.md`.
+
+### Domain docs
+
+Use a single context for this repository. Before exploring a domain or proposing an architectural change, read `docs/improvements/agents/domain.md`.

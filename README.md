@@ -60,9 +60,32 @@ through the archive's existing download buttons.
 
 On 2026-10-20, build, lint, render regressions and local HTTP upload/list/serve/
 attachment/ZIP checks passed again. Individual and ZIP attachment hashes matched
-the synthetic source files. Interactive browser and camera QA was paused by the
-user and was not repeated; the Chrome observations above are from 2026-10-18.
+the synthetic source files. Those synthetic checks are separate from the
+subsequently authorized real Iriun native/browser pass described next.
 
+### Real Iriun local-delivery checkpoint - 2026-10-20 (partial)
+
+One Classic Portrait session completed real four-shot Iriun capture, filter and
+reorder, bundled-frame selection, Bouncy preview and print review without
+printing, then uploaded four originals, a printable photostrip and a Bouncy MP4
+to the local-only archive. All four 1280x720 JPEG originals fully decode and
+match the camera-source files byte for byte. The normal composed H.264 MP4 is
+310x462, six seconds, six fps and 36 fully decoded distinct frames with no audio.
+The uploaded printable PNG is 1240x1843. Native PDF bytes were unavailable, so
+this is not a PDF-equivalence claim.
+
+Chrome opened both media dialogs and downloaded all six files in a ZIP; every
+ZIP entry matched its server attachment byte for byte. The first browser pass
+exposed a tall-image lightbox clipping issue. Recheck of the presentation fix at
+`51c6110` confirms the complete original photostrip fits with all four rows and
+both strips visible. Bouncy playback remains available, and all six original
+archive attachment hashes remain unchanged.
+
+Real Keychain capture also completed four independent custom/bundled frame and filter choices, retained Design 1 on return, and reached complete print review. A controlled local-server outage retained the sheet and consent OFF, re-enabled Get Soft Copies and produced no QR; restored-server retry succeeded. The four-second error snackbar was not visually captured; source confirms its message.
+
+All four 1280×720 original/source JPEG pairs match byte for byte. Each 620×922 quadrant of the 1240×1844 sheet is pixel-identical to its variant. The silent whole-sheet H.264 is 620×922, six seconds, six fps and 36 decoded distinct frames. All ten uploads match local hashes. Chrome contains the complete PNG/MP4; playback was observed through 0:05/0:06. The 5,786,819-byte ZIP contains ten entries matching server/local files. Media remained retained after normal close/relaunch.
+
+Private capture media and local evidence paths are excluded. Production-sized payloads, mobile layout and public uploads remain unverified. Iriun capture does not establish Canon quality or performance.
 ## Getting Started
 
 First, run the development server:

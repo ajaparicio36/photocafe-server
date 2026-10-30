@@ -28,7 +28,10 @@ export const GET = async (
 
     try {
       const buffer = await readFile(filePath);
-      const mimeType = lookup(decodedFilename) || "application/octet-stream";
+      // mime-types 3 classifies .mp4 as application/mp4; these are video previews.
+      const mimeType = /\.mp4$/i.test(decodedFilename)
+        ? "video/mp4"
+        : lookup(decodedFilename) || "application/octet-stream";
 
       console.log("File read successfully:", {
         filename: decodedFilename,

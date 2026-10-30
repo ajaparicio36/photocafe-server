@@ -19,12 +19,14 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
 }) => {
   const [imageLoading, setImageLoading] = useState(true);
   const [imageError, setImageError] = useState(false);
+  const [videoError, setVideoError] = useState(false);
 
   // Reset loading states when file changes
   React.useEffect(() => {
     if (file && isOpen) {
       setImageLoading(true);
       setImageError(false);
+      setVideoError(false);
     }
   }, [file, isOpen]);
 
@@ -42,24 +44,27 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
 
   if (!isOpen || !file) return null;
 
+  const isBouncyPreview = file.fileName.toLowerCase() === "bouncy_preview.mp4";
+
   return (
     <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-2 md:p-4">
       <div className="relative w-full h-full max-w-7xl max-h-full flex flex-col">
-        <div className="flex justify-between items-center p-4 brand-bg-secondary rounded-t-lg">
+        <div className="flex shrink-0 justify-between items-center p-4 brand-bg-secondary rounded-t-lg">
           <h3 className="brand-text-dark text-sm md:text-base truncate flex-1 mr-4 font-medium">
             {file.fileName}
           </h3>
           <button
             onClick={onClose}
+            aria-label="Close preview"
             className="brand-bg-primary brand-text-light rounded-full p-2 hover:bg-opacity-90 transition-colors flex-shrink-0 w-8 h-8 flex items-center justify-center"
           >
             ✕
           </button>
         </div>
 
-        <div className="flex-1 flex items-center justify-center bg-black/20 rounded-b-lg overflow-hidden">
+        <div className="flex-1 min-h-0 flex items-center justify-center bg-black/20 rounded-b-lg overflow-hidden">
           {isImage(file.fileName) ? (
-            <div className="relative max-w-full max-h-full">
+            <div className="relative flex h-full w-full min-h-0 items-center justify-center">
               {imageLoading && !imageError && (
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="brand-text-light">Loading image...</div>
@@ -81,7 +86,7 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
                 <img
                   src={file.url}
                   alt={file.fileName}
-                  className="max-w-full max-h-full object-contain"
+                  className="h-full w-full object-contain"
                   onLoad={() => {
                     console.log("Image loaded successfully:", file.fileName);
                     setImageLoading(false);
@@ -117,14 +122,33 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
               )}
             </div>
           ) : isVideo(file.fileName) ? (
-            <video
-              src={file.url}
-              controls
-              className="max-w-full max-h-full"
-              playsInline
-              preload="metadata"
-              controlsList="nodownload"
-            />
+            videoError ? (
+              <div className="brand-card p-8 rounded-lg text-center max-w-sm" role="status">
+                <p className="brand-text-dark mb-4">This video could not be played.</p>
+                <a
+                  href={file.url}
+                  download={file.fileName}
+                  className="inline-block brand-button-primary px-4 py-2 rounded hover:bg-opacity-90 transition-colors"
+                >
+                  Download video
+                </a>
+              </div>
+            ) : (
+              <video
+                key={file.url}
+                src={file.url}
+                controls
+                aria-label={file.fileName}
+                className="w-full h-full min-h-0 object-contain"
+                playsInline
+                autoPlay={isBouncyPreview}
+                loop={isBouncyPreview}
+                muted={isBouncyPreview}
+                preload="metadata"
+                controlsList="nodownload"
+                onError={() => setVideoError(true)}
+              />
+            )
           ) : isPDF(file.fileName) ? (
             <div className="w-full h-full">
               <iframe
